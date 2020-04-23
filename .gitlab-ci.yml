@@ -1,4 +1,4 @@
-image: docker:alpine
+image: docker:latest
 
 stages:
     - build
@@ -14,7 +14,7 @@ cache:
 
 default:
     before_script:
-        - apk add --update nodejs npm
+        - apt-get install nodejs npm
         - npm install
         - npm install react-scripts -g
 
