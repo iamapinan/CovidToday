@@ -40,7 +40,12 @@ export default class App extends Component {
           rel="noopener noreferrer"
         >
           https://covid19.th-stat.com/
-        </a> <br/>This project is opensource <a href="https://gitlab.com/apinan/covidetoday" target="_blank" class="App-link">https://gitlab.com/apinan/covidetoday</a></p>
+        </a> <br/>This project is opensource 
+        <a 
+        href="https://gitlab.com/apinan/covidetoday" 
+        rel="noopener noreferrer" 
+        target="_blank" 
+        class="App-link">https://gitlab.com/apinan/covidetoday</a></p>
       </div>
     );
   }
