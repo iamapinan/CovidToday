@@ -1,4 +1,4 @@
-image: docker:latest
+image: docker:18-git
 
 stages:
     - build
@@ -14,14 +14,13 @@ cache:
 
 default:
     before_script:
+        - docker info
         - apt-get install nodejs npm
         - npm install
         - npm install react-scripts -g
 
 build_image:
     stage: build
-    before_script:
-        - docker info
     script:
         - npm run build
         - docker build -t $IMAGE_NAME .
