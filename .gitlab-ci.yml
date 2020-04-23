@@ -1,0 +1,44 @@
+image: node:alpine
+
+stages:
+    - build
+    - test
+    - deploy
+
+variables:
+    IMAGE_NAME: $CI_REGISTRY/covidtoday
+
+cache:
+  paths:
+  - node_modules/
+
+default:
+    before_script:
+        - npm install
+        - npm install react-scripts -g
+
+test_script:
+    stage: test
+    script:
+        - npm run test
+        - docker run $IMAGE_NAME
+
+build_image:
+    stage: build
+    before_script:
+        - docker info
+    script:
+        - npm run build
+        - docker build -t $IMAGE_NAME .
+
+deploy_prod:
+    stage: deploy
+    only:
+        - tags
+    before_script:
+        - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
+    script:
+        - docker tag $IMAGE_NAME $IMAGE_NAME:$CI_COMMIT_TAG
+    after_script:
+        - docker push $IMAGE_NAME:$CI_COMMIT_TAG
+

@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  www:
+    image: iamapinan/covidtoday:latest
+    networks:
+      - public
+    ports:
+      - "8000:80"
+    deploy:
+      replicas: 2
+      placement:
+          constraints: [node.role == worker]
+
+networks:
+  public:
+    external: true
