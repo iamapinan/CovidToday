@@ -1,4 +1,4 @@
-image: node:alpine
+image: docker:alpine
 
 stages:
     - build
@@ -14,14 +14,9 @@ cache:
 
 default:
     before_script:
+        - apk add --update nodejs npm
         - npm install
         - npm install react-scripts -g
-
-test_script:
-    stage: test
-    script:
-        - npm run test
-        - docker run $IMAGE_NAME
 
 build_image:
     stage: build
@@ -30,6 +25,12 @@ build_image:
     script:
         - npm run build
         - docker build -t $IMAGE_NAME .
+
+test_script:
+    stage: test
+    script:
+        - npm run test
+        - docker run $IMAGE_NAME
 
 deploy_prod:
     stage: deploy
