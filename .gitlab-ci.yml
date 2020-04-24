@@ -4,7 +4,7 @@ services:
 
 stages:
     - build image
-    - deploy to registry
+    - release registry
 
 variables:
     CURRENT_VER: $IMAGE_NAME:$CI_COMMIT_REF_NAME
@@ -22,20 +22,19 @@ before_script:
     
 build_image:
     stage: build image
+    only:
+        - tags
     script:
         - npm run build
-        - echo "$CURRENT_VER"
-        - docker build --pull -t $CURRENT_VER .
-        - docker push $CURRENT_VER
+        - echo "$IMAGE_NAME:$CI_COMMIT_TAG"
+        - docker build --pull -t $IMAGE_NAME:$CI_COMMIT_TAG .
+        - docker push $IMAGE_NAME:$CI_COMMIT_TAG
 
 release:
-    stage: deploy to registry
+    stage: release registry
     only:
         - tags
     script:
         - docker pull $CURRENT_VER
         - docker tag $CURRENT_VER $LATEST_VER
-        - docker tag $CURRENT_VER $IMAGE_NAME:$CI_COMMIT_TAG
         - docker push $LATEST_VER
-        - docker push $IMAGE_NAME:$CI_COMMIT_TAG
-
