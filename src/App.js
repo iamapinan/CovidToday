@@ -31,7 +31,8 @@ export default class App extends Component {
             Covid 19 New case today is <span className='text-danger'>{this.state.today.NewConfirmed}</span> people.
           <br/>Total case <span className='text-warning'>{this.state.today.Confirmed}</span> and recovered <span className='text-success'>{this.state.today.Recovered}</span></p>
           <br/>
-          New Deaths {this.state.today.NewDeaths}
+          New Deaths {this.state.today.NewDeaths} <br/>
+          รักษาอยู่ {this.state.today.Hospitalized}
         </header>
         <p>Last updated {this.state.today.UpdateDate} <br/> Data source from&nbsp;
         <a
