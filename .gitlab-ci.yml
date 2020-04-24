@@ -38,3 +38,17 @@ release:
         - docker pull $CURRENT_VER
         - docker tag $CURRENT_VER $LATEST_VER
         - docker push $LATEST_VER
+
+deploy:
+    stage: deploy to production
+    only:
+        - tags
+    before_script:
+        - apk --no-cache add openssh rsync
+        - mkdir -p ~/.ssh
+        - eval $(ssh-agent -s)
+        - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    script:
+        - ssh-add <(echo "$SSH_PRIV_KEY")
+        - ssh -p22 $DEPLOY_USER@$DEPLOY_HOST "sudo docker pull $LATEST_VER && docker service update --image $LATEST_VER covidtoday"
+        
