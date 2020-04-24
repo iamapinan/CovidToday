@@ -21,6 +21,8 @@ default:
         - apk add --update nodejs npm
         - npm install
         - npm install react-scripts -g
+    script:
+        - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
 
 build_image:
     stage: build
@@ -38,8 +40,6 @@ deploy_prod:
     stage: deploy
     only:
         - tags
-    before_script:
-        - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
     script:
         - docker tag $IMAGE_NAME $IMAGE_NAME:$CI_COMMIT_TAG
     after_script:
