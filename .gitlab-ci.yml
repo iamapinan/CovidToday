@@ -18,12 +18,12 @@ cache:
 before_script:
     - apk add --update nodejs npm
     - npm install
-    - npm install react-scripts -g
-
+    
 build_image:
     stage: build image
     before_script:
         - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
+        - npm install react-scripts -g
     script:
         - npm run build
         - echo "$CURRENT_VER"
