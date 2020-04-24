@@ -5,6 +5,7 @@ services:
 stages:
     - build image
     - release registry
+    - deploy to production
 
 variables:
     CURRENT_VER: $IMAGE_NAME:$CI_COMMIT_REF_NAME
@@ -50,5 +51,5 @@ deploy:
         - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     script:
         - ssh-add <(echo "$SSH_PRIV_KEY")
-        - ssh -p22 $DEPLOY_USER@$DEPLOY_HOST "sudo docker pull $LATEST_VER && docker service update --image $LATEST_VER covidtoday"
+        - ssh -p22 $DEPLOY_USER@$DEPLOY_HOST "sudo docker pull $LATEST_VER && sudo docker service update --image $LATEST_VER covidtoday"
         
