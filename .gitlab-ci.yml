@@ -1,4 +1,7 @@
-image: docker:17.07.0-ce
+image: docker:latest
+
+services:
+    - docker:dind
 
 stages:
     - build
