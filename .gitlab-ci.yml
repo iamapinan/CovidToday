@@ -43,5 +43,5 @@ deploy:
         - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     script:
         - echo "$PRIV_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-        - ssh -p22 $DEPLOY_USER@$DEPLOY_HOST "sudo docker pull $LATEST_VER && sudo docker service update --image $LATEST_VER covidtoday"
+        - ssh -p22 $DEPLOY_USER@$DEPLOY_HOST "sudo docker pull $CURRENT_VER && sudo docker service update --image $CURRENT_VER covidtoday"
         
