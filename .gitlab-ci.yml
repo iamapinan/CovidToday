@@ -21,7 +21,6 @@ default:
         - apk add --update nodejs npm
         - npm install
         - npm install react-scripts -g
-    script:
         - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
 
 build_image:
