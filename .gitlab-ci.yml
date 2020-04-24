@@ -17,16 +17,12 @@ cache:
 
 before_script:
     - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
-    - apk add --update nodejs npm
-    - npm install
-    - npm install react-scripts -g
     
 build_image:
     stage: build image
     only:
         - tags
     script:
-        - npm run build
         - echo "$IMAGE_NAME:$CI_COMMIT_TAG"
         - docker build --pull -t $IMAGE_NAME:$CI_COMMIT_TAG .
         - docker push $IMAGE_NAME:$CI_COMMIT_TAG
