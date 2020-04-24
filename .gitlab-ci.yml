@@ -9,8 +9,7 @@ stages:
     - deploy to registry
 
 variables:
-    CURRENT_VER: $IMAGE_NAME:$CI_COMMIT_TAG
-    LATEST_VER: $IMAGE_NAME:latest
+    CURRENT_VER: $IMAGE_NAME:latest
 
 cache:
   paths:
@@ -29,8 +28,6 @@ build_image:
         - npm run build
         - echo "$CURRENT_VER"
         - docker build -t $CURRENT_VER .
-        - echo "$LATEST_VER"
-        - docker build -t $LATEST_VER .
 
 test_script:
     stage: test
@@ -43,5 +40,5 @@ release:
     only:
         - tags
     script:
-        - docker tag $CURRENT_VER && docker tag $LATEST_VER
-        - docker push $CURRENT_VER && docker push $LATEST_VER
+        - docker tag $CURRENT_VER
+        - docker push $CURRENT_VER
