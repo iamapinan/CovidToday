@@ -10,7 +10,7 @@ variables:
     LATEST_VER: $IMAGE_NAME:latest
 
 services:
-    - docker:18.09.7-dind
+    - docker:18.09-dind
 
 cache:
   paths:
@@ -43,4 +43,3 @@ deploy_prod:
         - docker login -u "$DOCKER_USER" -p "$DOCKER_TOKEN"
         - docker tag $CURRENT_VER && docker tag $LATEST_VER
         - docker push $CURRENT_VER && docker push $LATEST_VER
-
