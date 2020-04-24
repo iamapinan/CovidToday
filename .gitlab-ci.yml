@@ -1,6 +1,6 @@
 image: docker:latest
 services:
-- docker:dind
+- docker:18.09-dind
 
 stages:
     - build image
@@ -15,9 +15,8 @@ cache:
   paths:
   - node_modules/
 
-
 before_script:
-    - docker login -u "$DOCKER_USER" -p "$DOCKER_TOKEN"
+    - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
     - apk add --update nodejs npm
     - npm install
     - npm install react-scripts -g
