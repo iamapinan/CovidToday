@@ -11,10 +11,6 @@ variables:
     CURRENT_VER: $IMAGE_NAME:$CI_COMMIT_REF_NAME
     LATEST_VER: $IMAGE_NAME:latest
 
-cache:
-  paths:
-  - node_modules/
-
 before_script:
     - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
     
@@ -38,10 +34,10 @@ release:
 
 deploy:
     stage: deploy to production
-    only:
-        - tags
+    # only:
+    #     - tags
     before_script:
-        - apk --no-cache add openssh rsync
+        - apk --no-cache add openssh
         - mkdir -p ~/.ssh
         - eval $(ssh-agent -s)
         - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
