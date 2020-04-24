@@ -1,4 +1,4 @@
-image: docker:18.09.7-dind
+image: docker:17.07.0-ce
 
 stages:
     - build
@@ -8,7 +8,6 @@ stages:
 variables:
     CURRENT_VER: $IMAGE_NAME:$CI_COMMIT_TAG
     LATEST_VER: $IMAGE_NAME:latest
-    DOCKER_TLS_CERTDIR: ""
 
 cache:
   paths:
