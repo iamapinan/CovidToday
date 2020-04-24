@@ -41,7 +41,7 @@ deploy:
         - mkdir -p ~/.ssh
         - eval $(ssh-agent -s)
         - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-        - ssh-add <(echo "$PRIV_KEY")
     script:
+        - ssh-add <(echo "$SSH_PRIV_KEY")
         - ssh -p22 $DEPLOY_USER@$DEPLOY_HOST "sudo docker pull $LATEST_VER && sudo docker service update --image $LATEST_VER covidtoday"
         
