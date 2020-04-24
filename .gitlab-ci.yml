@@ -6,7 +6,8 @@ stages:
     - deploy
 
 variables:
-    IMAGE_NAME: $CI_REGISTRY/covidtoday
+    CURRENT_VER: $IMAGE_NAME:$CI_COMMIT_TAG
+    LATEST_VER: $IMAGE_NAME:latest
 
 services:
     - docker:18.09.7-dind
@@ -21,26 +22,25 @@ default:
         - apk add --update nodejs npm
         - npm install
         - npm install react-scripts -g
-        - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
 
 build_image:
     stage: build
     script:
         - npm run build
-        - docker build -t $IMAGE_NAME .
+        - docker build -t $CURRENT_VER -t $LATEST_VER .
 
 test_script:
     stage: test
     script:
         - npm run test
-        - docker run $IMAGE_NAME
+        - docker run $CURRENT_VER
 
 deploy_prod:
     stage: deploy
     only:
         - tags
     script:
-        - docker tag $IMAGE_NAME $IMAGE_NAME:$CI_COMMIT_TAG
-    after_script:
-        - docker push $IMAGE_NAME:$CI_COMMIT_TAG
+        - docker login -u "$DOCKER_USER" -p "$DOCKER_TOKEN"
+        - docker tag $CURRENT_VER && docker tag $LATEST_VER
+        - docker push $CURRENT_VER && docker push $LATEST_VER
 
