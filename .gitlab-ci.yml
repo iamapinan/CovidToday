@@ -4,7 +4,6 @@ services:
 
 stages:
     - build image
-    - test
     - deploy to registry
 
 variables:
@@ -16,35 +15,23 @@ cache:
   - node_modules/
 
 before_script:
+    - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
     - apk add --update nodejs npm
     - npm install
+    - npm install react-scripts -g
     
 build_image:
     stage: build image
-    before_script:
-        - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
-        - npm install react-scripts -g
     script:
         - npm run build
         - echo "$CURRENT_VER"
         - docker build --pull -t $CURRENT_VER .
         - docker push $CURRENT_VER
 
-test_script:
-    stage: test
-    before_script:
-        - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
-    script:
-        - npm run test
-        - docker pull $CURRENT_VER
-        - docker run $CURRENT_VER
-
 release:
     stage: deploy to registry
     only:
         - tags
-    before_script:
-        - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
     script:
         - docker pull $CURRENT_VER
         - docker tag $CURRENT_VER $LATEST_VER
