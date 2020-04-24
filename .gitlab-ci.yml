@@ -8,6 +8,7 @@ stages:
 variables:
     CURRENT_VER: $IMAGE_NAME:$CI_COMMIT_TAG
     LATEST_VER: $IMAGE_NAME:latest
+    DOCKER_TLS_CERTDIR: ""
 
 cache:
   paths:
