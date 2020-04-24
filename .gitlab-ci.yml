@@ -10,19 +10,21 @@ stages:
 variables:
     CURRENT_VER: $IMAGE_NAME:$CI_COMMIT_REF_NAME
     LATEST_VER: $IMAGE_NAME:latest
+    RELEASE_VER: $IMAGE_NAME:$CI_COMMIT_TAG
 
 cache:
   paths:
   - node_modules/
 
 before_script:
-    - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
     - apk add --update nodejs npm
     - npm install
     - npm install react-scripts -g
 
 build_image:
     stage: build image
+    before_script:
+        - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
     script:
         - npm run build
         - echo "$CURRENT_VER"
@@ -31,6 +33,8 @@ build_image:
 
 test_script:
     stage: test
+    before_script:
+        - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
     script:
         - npm run test
         - docker pull $CURRENT_VER
@@ -40,7 +44,12 @@ release:
     stage: deploy to registry
     only:
         - tags
+    before_script:
+        - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USER" --password-stdin
     script:
         - docker pull $CURRENT_VER
         - docker tag $CURRENT_VER $LATEST_VER
+        - docker tag $CURRENT_VER $RELEASE_VER
         - docker push $LATEST_VER
+        - docker push $RELEASE_VER
+
