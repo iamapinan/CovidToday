@@ -34,8 +34,8 @@ release:
 
 deploy:
     stage: deploy to production
-    # only:
-    #     - tags
+    only:
+        - tags
     before_script:
         - apk --no-cache add openssh
         - mkdir -p ~/.ssh
