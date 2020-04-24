@@ -27,7 +27,10 @@ build_image:
     stage: build image
     script:
         - npm run build
-        - docker build -t $CURRENT_VER -t $LATEST_VER .
+        - echo "$CURRENT_VER"
+        - docker build -t $CURRENT_VER .
+        - echo "$LATEST_VER"
+        - docker build -t $LATEST_VER .
 
 test_script:
     stage: test
