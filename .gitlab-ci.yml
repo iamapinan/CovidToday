@@ -1,7 +1,6 @@
 image: docker:latest
-
 services:
-    - docker:dind
+- docker:dind
 
 stages:
     - build image
@@ -9,7 +8,8 @@ stages:
     - deploy to registry
 
 variables:
-    CURRENT_VER: $IMAGE_NAME:latest
+    CURRENT_VER: $IMAGE_NAME:$CI_COMMIT_REF_NAME
+    LATEST_VER: $IMAGE_NAME:latest
 
 cache:
   paths:
@@ -27,12 +27,14 @@ build_image:
     script:
         - npm run build
         - echo "$CURRENT_VER"
-        - docker build -t $CURRENT_VER .
+        - docker build --pull -t $CURRENT_VER .
+        - docker push $CURRENT_VER
 
 test_script:
     stage: test
     script:
         - npm run test
+        - docker pull $CURRENT_VER
         - docker run $CURRENT_VER
 
 release:
@@ -40,5 +42,6 @@ release:
     only:
         - tags
     script:
-        - docker tag $CURRENT_VER
-        - docker push $CURRENT_VER
+        - docker pull $CURRENT_VER
+        - docker tag $CURRENT_VER $LATEST_VER
+        - docker push $LATEST_VER
